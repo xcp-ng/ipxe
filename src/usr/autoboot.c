@@ -371,8 +371,10 @@ static int have_pxe_menu ( void ) {
 		= { .tag = DHCP_PXE_BOOT_MENU };
 	char buf[ 10 /* "PXEClient" + NUL */ ];
 	unsigned int pxe_discovery_control;
+	struct settings *proxy_settings;
 
-	fetch_string_setting ( NULL, &vendor_class_id_setting,
+	proxy_settings = find_settings ( PROXYDHCP_SETTINGS_NAME );
+	fetch_string_setting ( proxy_settings, &vendor_class_id_setting,
 			       buf, sizeof ( buf ) );
 	pxe_discovery_control =
 		fetch_uintz_setting ( NULL, &pxe_discovery_control_setting );
