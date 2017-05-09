@@ -1477,8 +1477,6 @@ int start_pxebs ( struct interface *job, struct net_device *netdev,
 	timer_init ( &dhcp->timer, dhcp_timer_expired, &dhcp->refcnt );
 	dhcp->netdev = netdev_get ( netdev );
 	dhcp->local.sin_family = AF_INET;
-	fetch_ipv4_setting ( netdev_settings ( netdev ), &ip_setting,
-			     &dhcp->local.sin_addr );
 	dhcp->local.sin_port = htons ( BOOTPC_PORT );
 	dhcp->pxe_type = cpu_to_le16 ( pxe_type );
 
@@ -1527,6 +1525,8 @@ int start_pxebs ( struct interface *job, struct net_device *netdev,
 				  ( struct sockaddr * ) &dhcp->local ) ) != 0 )
 		goto err;
 
+	fetch_ipv4_setting ( netdev_settings ( netdev ), &ip_setting,
+			     &dhcp->local.sin_addr );
 	/* Enter PXEBS state */
 	dhcp_set_state ( dhcp, &dhcp_state_pxebs );
 
