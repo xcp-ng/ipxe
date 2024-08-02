@@ -73,29 +73,11 @@ SRCDIRS		+= drivers/bus
 SRCDIRS		+= drivers/net
 SRCDIRS		+= drivers/net/e1000
 SRCDIRS		+= drivers/net/e1000e
-SRCDIRS		+= drivers/net/igb
-SRCDIRS		+= drivers/net/igbvf
-SRCDIRS		+= drivers/net/phantom
-SRCDIRS		+= drivers/net/vxge
 SRCDIRS		+= drivers/net/efi
-SRCDIRS		+= drivers/net/tg3
-SRCDIRS		+= drivers/net/bnxt
-SRCDIRS		+= drivers/net/sfc
-SRCDIRS		+= drivers/net/marvell
 SRCDIRS		+= drivers/block
 SRCDIRS		+= drivers/nvs
 SRCDIRS		+= drivers/bitbash
 SRCDIRS		+= drivers/gpio
-SRCDIRS		+= drivers/infiniband
-SRCDIRS		+= drivers/infiniband/mlx_utils_flexboot/src
-SRCDIRS		+= drivers/infiniband/mlx_utils/src/public
-SRCDIRS		+= drivers/infiniband/mlx_utils/mlx_lib/mlx_reg_access
-SRCDIRS		+= drivers/infiniband/mlx_utils/mlx_lib/mlx_nvconfig
-SRCDIRS		+= drivers/infiniband/mlx_utils/mlx_lib/mlx_vmac
-SRCDIRS		+= drivers/infiniband/mlx_utils/mlx_lib/mlx_blink_leds
-SRCDIRS		+= drivers/infiniband/mlx_utils/mlx_lib/mlx_link_speed
-SRCDIRS		+= drivers/infiniband/mlx_utils/mlx_lib/mlx_mtu
-SRCDIRS		+= drivers/infiniband/mlx_nodnic/src
 SRCDIRS		+= drivers/usb
 SRCDIRS		+= drivers/uart
 SRCDIRS		+= interface/pxe interface/efi interface/smbios
@@ -111,10 +93,34 @@ SRCDIRS		+= usr
 SRCDIRS		+= config
 SRCDIRS		+= net/oncrpc
 SRCDIRS		+= net/80211
-SRCDIRS		+= drivers/net/rtl818x
-SRCDIRS		+= drivers/net/ath
-SRCDIRS		+= drivers/net/ath/ath5k
-SRCDIRS		+= drivers/net/ath/ath9k
+
+# Remove multiple directories from SRCDIRS
+# We only use rtl8139 NIC (realtek.c), no need to build other NICs
+REMOVED_SRCDIRS := $(SRCDIRS)
+SRCDIRS := $(filter-out \
+	drivers/net/igb \
+	drivers/net/igbvf \
+	drivers/net/phantom \
+	drivers/net/vxge \
+	drivers/net/tg3 \
+	drivers/net/bnxt \
+	drivers/net/sfc \
+	drivers/net/marvell \
+	drivers/net/rtl818x \
+	drivers/net/ath \
+	drivers/net/ath/ath5k \
+	drivers/net/ath/ath9k \
+	drivers/infiniband \
+	drivers/infiniband/mlx_utils_flexboot/src \
+	drivers/infiniband/mlx_utils/src/public \
+	drivers/infiniband/mlx_utils/mlx_lib/mlx_reg_access \
+	drivers/infiniband/mlx_utils/mlx_lib/mlx_nvconfig \
+	drivers/infiniband/mlx_utils/mlx_lib/mlx_vmac \
+	drivers/infiniband/mlx_utils/mlx_lib/mlx_blink_leds \
+	drivers/infiniband/mlx_utils/mlx_lib/mlx_link_speed \
+	drivers/infiniband/mlx_utils/mlx_lib/mlx_mtu \
+	drivers/infiniband/mlx_nodnic/src, \
+	$(REMOVED_SRCDIRS))
 
 # NON_AUTO_SRCS lists files that are excluded from the normal
 # automatic build system.
