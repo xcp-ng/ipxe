@@ -28,7 +28,7 @@ FILE_SECBOOT ( PERMITTED );
 
 /* Console types supported only on systems with serial ports */
 #if ! defined ( SERIAL_NULL )
-  //#define CONSOLE_SERIAL	/* Serial port console */
+  #define CONSOLE_SERIAL	/* Serial port console */
 #endif
 
 /* Console types supported only on BIOS platforms */
