@@ -156,6 +156,7 @@ static void efi_snp_flush ( struct efi_snp_device *snpdev ) {
 	/* Discard any queued receive buffers */
 	list_for_each_entry_safe ( iobuf, tmp, &snpdev->rx, list ) {
 		list_del ( &iobuf->list );
+		snpdev->rx_count--;
 		free_iob ( iobuf );
 	}
 }
@@ -174,7 +175,13 @@ static void efi_snp_poll ( struct efi_snp_device *snpdev ) {
 
 	/* Retrieve any received packets */
 	while ( ( iobuf = netdev_rx_dequeue ( snpdev->netdev ) ) ) {
+		if ( snpdev->rx_count >= EFI_SNP_NUM_RX ) {
+			free_iob ( iobuf );
+			continue;
+		}
+
 		list_add_tail ( &iobuf->list, &snpdev->rx );
+		snpdev->rx_count++;
 		snpdev->interrupts |= EFI_SIMPLE_NETWORK_RECEIVE_INTERRUPT;
 		bs->SignalEvent ( snpdev->snp.WaitForPacket );
 	}
@@ -800,6 +807,7 @@ efi_snp_receive ( EFI_SIMPLE_NETWORK_PROTOCOL *snp,
 
 	/* Dequeue packet */
 	list_del ( &iobuf->list );
+	snpdev->rx_count--;
 
 	/* Return packet to caller, truncating to buffer length */
 	copy_len = iob_len ( iobuf );

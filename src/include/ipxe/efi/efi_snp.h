@@ -25,6 +25,9 @@ FILE_SECBOOT ( PERMITTED );
 /** SNP transmit completion ring size */
 #define EFI_SNP_NUM_TX 32
 
+/** Max packets in the receive queue */
+#define EFI_SNP_NUM_RX 64
+
 /** An SNP device */
 struct efi_snp_device {
 	/** List of SNP devices */
@@ -49,6 +52,8 @@ struct efi_snp_device {
 	unsigned int tx_prod;
 	/** Transmit completion ring consumer counter */
 	unsigned int tx_cons;
+	/** Length of receive queue */
+	unsigned int rx_count;
 	/** Receive queue */
 	struct list_head rx;
 	/** The network interface identifier */
