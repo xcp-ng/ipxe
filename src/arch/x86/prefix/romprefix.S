@@ -471,32 +471,6 @@ no_pmm:
 	testb	$PCI_FUNC_MASK, init_pci_busdevfn
 	jnz	no_shell
 .endif
-	/* Prompt for POST-time shell */
-	movw	$init_message_prompt, %si
-	xorw	%di, %di
-	call	print_message
-	movw	$prodstr, %si
-	call	print_message
-	movw	$init_message_dots, %si
-	call	print_message
-	/* Wait for Ctrl-B */
-	movw	$0xff02, %bx
-	call	wait_for_key
-	/* Clear prompt */
-	pushf
-	xorw	%di, %di
-	call	print_kill_line
-	movw	$init_message_done, %si
-	call	print_message
-	popf
-	jnz	no_shell
-	/* Ctrl-B was pressed: invoke iPXE.  The keypress will be
-	 * picked up by the initial shell prompt, and we will drop
-	 * into a shell.
-	 */
-	xorl	%ebp, %ebp	/* Inhibit use of INT 15,e820 and INT 15,e801 */
-	pushw	%cs
-	call	exec
 no_shell:
 	movb	$( '\n' ), %al
 	xorw	%di, %di
@@ -639,9 +613,6 @@ init_message_pmm:
 init_message_int19:
 	.asciz	" INT19"
 	.size	init_message_int19, . - init_message_int19
-init_message_prompt:
-	.asciz	"\nPress Ctrl-B to configure "
-	.size	init_message_prompt, . - init_message_prompt
 init_message_dots:
 	.asciz	"..."
 	.size	init_message_dots, . - init_message_dots
